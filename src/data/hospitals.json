@@ -1,0 +1,15 @@
+{
+  "hospitals": [
+    {
+      "id": "1",
+      "name": "행복한 앵무새 병원",
+      "address": "서울시 강남구 테헤란로 123",
+      "latitude": 37.5665,
+      "longitude": 126.978,
+      "phoneNumber": "02-123-4567",
+      "description": "앵무새 전문 진료 병원입니다.",
+      "operatingHours": "09:00-18:00",
+      "services": ["일반진료", "수술", "검진"]
+    }
+  ]
+}
