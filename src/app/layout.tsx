@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>
+      <body className="flex flex-col h-screen">
         <header className="bg-white pt-6">
           <div className="flex flex-col items-center">
             <div className="flex items-center justify-center w-full">
@@ -24,10 +24,12 @@ export default function RootLayout({
             <Navigation />
           </div>
         </header>
-        <main className="container mx-auto px-4 py-8">{children}</main>
-        <footer className="bg-gray-100 mt-8">
+        <main className="container mx-auto px-4 py-8 flex-grow">
+          {children}
+        </main>
+        <footer className="bg-gray-100 mt-auto">
           <div className="container mx-auto px-4 py-6 text-center text-gray-600">
-            © 2024 앵무새 케어. All rights reserved.
+            © 2025 앵모닝. All rights reserved.
           </div>
         </footer>
       </body>
