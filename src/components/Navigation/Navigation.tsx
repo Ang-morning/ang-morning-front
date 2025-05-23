@@ -40,12 +40,14 @@ function DesktopNavigation(props: { className?: string }) {
         <div className="flex-1 justify-start">
           <Logo />
         </div>
-        <div className="flex items-center gap-8 cursor-pointer select-none flex-1">
-          <div className="flex items-center gap-2 cursor-pointer select-none">
-            <Link href="/hospital">Find Hospital</Link>
-          </div>
-          <div className="flex items-center gap-2 cursor-pointer select-none">
-            <Link href="/blog">Blog</Link>
+        <div className="flex items-center justify-center">
+          <div className="flex items-center gap-8 cursor-pointer select-none flex-1">
+            <div className="flex items-center gap-2 cursor-pointer select-none">
+              <Link href="/hospital">Find Hospital</Link>
+            </div>
+            <div className="flex items-center gap-2 cursor-pointer select-none">
+              <Link href="/blog">Blog</Link>
+            </div>
           </div>
         </div>
         <div className="flex-1"></div>
