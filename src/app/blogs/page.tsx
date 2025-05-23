@@ -1,6 +1,3 @@
-import Link from "next/link";
-import posts from "@/data/posts.json";
-
 export default function BlogPage() {
   return (
     <div className="max-w-4xl mx-auto px-4">
@@ -14,7 +11,7 @@ export default function BlogPage() {
       </div>
 
       <div className="space-y-8">
-        {posts.posts.map((post) => (
+        {/* {posts.posts.map((post) => (
           <article
             key={post.id}
             className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
@@ -77,7 +74,7 @@ export default function BlogPage() {
               </svg>
             </Link>
           </article>
-        ))}
+        ))} */}
       </div>
     </div>
   );

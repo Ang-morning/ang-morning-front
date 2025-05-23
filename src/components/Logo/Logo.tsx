@@ -18,14 +18,15 @@ function Logo() {
   // handlers
 
   return (
-    <div className="flex-1 flex justify-center gap-2">
-      <Image
-        src="/images/logos/logo_with_black_eye.jpeg"
-        alt="ANG MORNING"
-        width={100}
-        height={100}
-      />
-      <span className="text-5xl font-rock tracking-widest select-none">
+    <div className="flex-1 flex items-center gap-2">
+      <div className="relative w-18 h-12">
+        <Image
+          src="/images/logos/logo_with_parrot_face.svg"
+          alt="ANG MORNING"
+          fill
+        />
+      </div>
+      <span className="text-4xl font-rock tracking-widest select-none">
         MORNING
       </span>
     </div>
