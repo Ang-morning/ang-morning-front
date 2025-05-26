@@ -17,9 +17,12 @@ function MobileDrawer(props: { isOpen: boolean; onClose: () => void }) {
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
-      // 다음 프레임에서 애니메이션 시작
-      const timer = setTimeout(() => setIsAnimating(true), 10);
-      return () => clearTimeout(timer);
+      // 브라우저의 다음 렌더링 프레임을 기다린 후 애니메이션 시작
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsAnimating(true);
+        });
+      });
     } else {
       setIsAnimating(false);
       const timer = setTimeout(() => setIsVisible(false), 500);
@@ -79,7 +82,7 @@ function MobileDrawer(props: { isOpen: boolean; onClose: () => void }) {
             <button
               type="button"
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 cursor-pointer"
             >
               <svg
                 className="w-6 h-6"
@@ -110,7 +113,7 @@ function MobileDrawer(props: { isOpen: boolean; onClose: () => void }) {
               className="block text-lg font-gamja py-3 px-4 hover:bg-blue-50 rounded-lg transition-colors duration-200"
               onClick={onClose}
             >
-              Find Hospital
+              병원찾기
             </Link>
             <Link
               href="/blog"
@@ -146,7 +149,11 @@ function MobileMenuButton() {
 
   return (
     <>
-      <button type="button" onClick={handleMenuClick}>
+      <button
+        className="cursor-pointer"
+        type="button"
+        onClick={handleMenuClick}
+      >
         <svg
           className="w-6 h-6"
           fill="none"

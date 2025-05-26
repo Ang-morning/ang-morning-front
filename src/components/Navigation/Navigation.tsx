@@ -43,7 +43,7 @@ function DesktopNavigation(props: { className?: string }) {
         <div className="flex items-center justify-center">
           <div className="flex items-center gap-8 cursor-pointer select-none flex-1">
             <div className="flex items-center gap-2 cursor-pointer select-none">
-              <Link href="/hospital">Find Hospital</Link>
+              <Link href="/hospital">병원 찾기</Link>
             </div>
             <div className="flex items-center gap-2 cursor-pointer select-none">
               <Link href="/blog">Blog</Link>
