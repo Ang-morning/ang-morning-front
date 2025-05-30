@@ -59,17 +59,17 @@ function MobileDrawer(props: { isOpen: boolean; onClose: () => void }) {
 
   return (
     <div
-      className={`fixed inset-0 z-50 bg-black transition-opacity duration-300 ease-out ${
-        isAnimating ? "bg-opacity-30" : "bg-opacity-0"
+      className={`absolute w-screen h-screen inset-0 z-[9999] bg-black/50 transition-opacity duration-300 ease-out ${
+        isAnimating ? "bg-opacity-50" : "bg-opacity-0"
       }`}
       onClick={handleBackdropClick}
     >
       <div
-        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transition-transform duration-500 ease-out ${
+        className={`absolute top-0 right-0 h-screen w-80 max-w-[80vw] bg-white shadow-lg transition-transform duration-500 ease-out ${
           isAnimating ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="p-6">
+        <div className="p-6 h-full overflow-y-auto">
           <div
             className={`flex justify-between items-center mb-8 transition-all duration-300 ease-out ${
               isAnimating
@@ -78,11 +78,11 @@ function MobileDrawer(props: { isOpen: boolean; onClose: () => void }) {
             }`}
             style={{ transitionDelay: isAnimating ? "200ms" : "0ms" }}
           >
-            <h2 className="text-xl font-gamja">Menu</h2>
+            <h2 className="text-xl font-gamja text-primary-800">Menu</h2>
             <button
               type="button"
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 cursor-pointer"
+              className="p-2 hover:bg-primary-50 rounded-full transition-colors duration-200 cursor-pointer text-primary-600 hover:text-primary-700"
             >
               <svg
                 className="w-6 h-6"
@@ -110,14 +110,14 @@ function MobileDrawer(props: { isOpen: boolean; onClose: () => void }) {
           >
             <Link
               href="/hospital"
-              className="block text-lg font-gamja py-3 px-4 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+              className="block text-lg font-gamja py-3 px-4 hover:bg-primary-50 rounded-lg transition-colors duration-200 text-gray-700 hover:text-primary-700"
               onClick={onClose}
             >
               병원찾기
             </Link>
             <Link
               href="/blog"
-              className="block text-lg font-gamja py-3 px-4 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+              className="block text-lg font-gamja py-3 px-4 hover:bg-secondary-50 rounded-lg transition-colors duration-200 text-gray-700 hover:text-secondary-700"
               onClick={onClose}
             >
               Blog
@@ -148,9 +148,9 @@ function MobileMenuButton() {
   };
 
   return (
-    <>
+    <div className="sm:hidden w-full flex justify-end">
       <button
-        className="cursor-pointer"
+        className="cursor-pointer text-gray-700 hover:text-primary-700 transition-colors"
         type="button"
         onClick={handleMenuClick}
       >
@@ -170,7 +170,7 @@ function MobileMenuButton() {
         </svg>
       </button>
       <MobileDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} />
-    </>
+    </div>
   );
 }
 

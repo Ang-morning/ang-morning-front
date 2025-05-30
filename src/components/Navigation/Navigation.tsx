@@ -2,9 +2,8 @@ import Link from "next/link";
 import { Logo } from "../Logo";
 import { MobileMenuButton } from "./MobileDrawer";
 
-function MobileNavigation(props: { className?: string }) {
+function MobileNavigation() {
   // prop destruction
-  const { className } = props;
   // lib hooks
   // state, ref, querystring hooks
   // form hooks
@@ -13,19 +12,11 @@ function MobileNavigation(props: { className?: string }) {
   // effects
   // handlers
 
-  return (
-    <nav className={className}>
-      <div className="rounded border-2 border-blue-200 bg-blue-200/60 px-8 py-4 flex justify-between items-center font-gamja text-2xl text-black">
-        <Logo />
-        <MobileMenuButton />
-      </div>
-    </nav>
-  );
+  return <MobileMenuButton />;
 }
 
-function DesktopNavigation(props: { className?: string }) {
+function DesktopNavigation() {
   // prop destruction
-  const { className } = props;
   // lib hooks
   // state, ref, querystring hooks
   // form hooks
@@ -35,24 +26,19 @@ function DesktopNavigation(props: { className?: string }) {
   // handlers
 
   return (
-    <nav className={className}>
-      <div className="rounded border-2 border-blue-200 bg-blue-200/60 px-8 py-4 flex justify-between items-center font-gamja text-2xl text-black">
-        <div className="flex-1 justify-start">
-          <Logo />
-        </div>
-        <div className="flex items-center justify-center">
-          <div className="flex items-center gap-8 cursor-pointer select-none flex-1">
-            <div className="flex items-center gap-2 cursor-pointer select-none">
-              <Link href="/hospital">병원 찾기</Link>
-            </div>
-            <div className="flex items-center gap-2 cursor-pointer select-none">
-              <Link href="/blog">Blog</Link>
-            </div>
+    <>
+      <div className="hidden sm:flex items-center justify-center">
+        <div className="flex items-center gap-8 cursor-pointer select-none flex-1">
+          <div className="flex items-center gap-2 cursor-pointer select-none hover:text-primary-700 transition-colors">
+            <Link href="/hospital">병원 찾기</Link>
+          </div>
+          <div className="flex items-center gap-2 cursor-pointer select-none hover:text-secondary-700 transition-colors">
+            <Link href="/blog">Blog</Link>
           </div>
         </div>
-        <div className="flex-1"></div>
       </div>
-    </nav>
+      <div className="hidden flex-1 sm:flex"></div>
+    </>
   );
 }
 
@@ -68,8 +54,15 @@ function Navigation() {
 
   return (
     <header>
-      <MobileNavigation className="w-full sm:hidden" />
-      <DesktopNavigation className="w-full hidden sm:block" />
+      <nav>
+        <div className="rounded border border-primary-100 bg-primary-100/50 backdrop-blur-sm px-8 py-4 flex justify-between items-center font-gamja text-2xl text-gray-800 shadow-sm">
+          <Link href="/" className="flex-1 justify-start">
+            <Logo />
+          </Link>
+          <MobileNavigation />
+          <DesktopNavigation />
+        </div>
+      </nav>
     </header>
   );
 }
