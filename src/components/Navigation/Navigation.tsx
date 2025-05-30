@@ -30,10 +30,10 @@ function DesktopNavigation() {
       <div className="hidden sm:flex items-center justify-center">
         <div className="flex items-center gap-8 cursor-pointer select-none flex-1">
           <div className="flex items-center gap-2 cursor-pointer select-none hover:text-primary-700 transition-colors">
-            <Link href="/hospital">병원 찾기</Link>
+            <Link href="/hospitals">병원 찾기</Link>
           </div>
           <div className="flex items-center gap-2 cursor-pointer select-none hover:text-secondary-700 transition-colors">
-            <Link href="/blog">Blog</Link>
+            <Link href="/blogs">블로그</Link>
           </div>
         </div>
       </div>
