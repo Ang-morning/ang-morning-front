@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -146,9 +147,15 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-12 text-center">
-              <div className="text-8xl mb-6">🦜</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            <div className="bg-gradient-to-br gap-x-48 from-primary-50 to-secondary-50 rounded-3xl p-12 text-center flex flex-col items-center justify-center">
+              <Image
+                src="/images/junbae.jpg"
+                alt="parrot"
+                width={150}
+                height={100}
+                className="rounded-full"
+              />
+              <h3 className="text-2xl font-bold text-gray-800 ">
                 개인 기록 공간
               </h3>
               <p className="text-gray-600 text-lg">
