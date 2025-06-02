@@ -1,3 +1,4 @@
-export * from "./Logo";
-export * from "./Navigation";
 export * from "./Footer";
+export * from "./Logo";
+export * from "./Map";
+export * from "./Navigation";
