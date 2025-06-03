@@ -122,6 +122,25 @@ function Map({
       myLocationMarkerRef.current = null;
     }
 
+    // Info window 닫기 함수를 전역으로 등록
+    (
+      window as unknown as { closeInfoWindow: (id: string) => void }
+    ).closeInfoWindow = (id: string) => {
+      if (id === "my-location") {
+        // 내 위치 info window 직접 닫기
+        const myLocationInfoWindow = infoWindowsRef.current["my-location"];
+        if (myLocationInfoWindow) {
+          myLocationInfoWindow.close();
+        }
+      } else {
+        // 특정 마커의 info window 닫기
+        const targetInfoWindow = infoWindowsRef.current[id];
+        if (targetInfoWindow) {
+          targetInfoWindow.close();
+        }
+      }
+    };
+
     // 내 위치 마커 추가 (위치를 알고 있는 경우)
     if (hasUserLocation && userLocation) {
       const myLocationMarker = new window.naver.maps.Marker({
@@ -169,9 +188,9 @@ function Map({
       // 내 위치 마커 클릭 시 정보창 표시
       const myLocationInfoWindow = new window.naver.maps.InfoWindow({
         content: `
-          <div style="padding: 10px; position: relative; min-width: 150px;" class="custom-infowindow">
+          <div style="padding: 10px; position: relative; min-width: 150px;" class="custom-infowindow" id="my-location-infowindow">
             <button 
-              class="close-btn"
+              onclick="window.closeInfoWindow('my-location')"
               style="
                 position: absolute;
                 top: 5px;
@@ -203,6 +222,9 @@ function Map({
         `,
       });
 
+      // 내 위치 정보창을 전역 참조에 저장 (특별한 키로)
+      infoWindowsRef.current["my-location"] = myLocationInfoWindow;
+
       window.naver.maps.Event.addListener(myLocationMarker, "click", () => {
         // 모든 info window 닫기
         Object.values(infoWindowsRef.current).forEach((iw) => iw.close());
@@ -210,26 +232,6 @@ function Map({
         // 내 위치 info window 열기
         myLocationInfoWindow.open(map, myLocationMarker);
       });
-
-      // 내 위치 info window X 버튼 이벤트 연결
-      window.naver.maps.Event.addListener(
-        myLocationInfoWindow,
-        "domready",
-        () => {
-          setTimeout(() => {
-            const closeButton = document.querySelector(
-              ".custom-infowindow .close-btn"
-            );
-            if (closeButton) {
-              closeButton.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                myLocationInfoWindow.close();
-              });
-            }
-          }, 100);
-        }
-      );
     }
 
     // 새로운 마커들 추가
@@ -248,9 +250,9 @@ function Map({
         if (markerData.content) {
           const infoWindow = new window.naver.maps.InfoWindow({
             content: `
-              <div style="padding: 10px; position: relative; min-width: 200px;" class="custom-infowindow">
+              <div style="padding: 10px; position: relative; min-width: 200px;" class="custom-infowindow" id="infowindow-${markerData.id}">
                 <button 
-                  class="close-btn"
+                  onclick="window.closeInfoWindow('${markerData.id}')"
                   style="
                     position: absolute;
                     top: 5px;
@@ -293,23 +295,6 @@ function Map({
             if (onMarkerClick) {
               onMarkerClick(markerData.id);
             }
-          });
-
-          // info window가 DOM에 추가될 때 X 버튼 이벤트 연결
-          window.naver.maps.Event.addListener(infoWindow, "domready", () => {
-            // 약간의 딜레이를 두어 DOM이 완전히 렌더링된 후 이벤트 연결
-            setTimeout(() => {
-              const closeButton = document.querySelector(
-                ".custom-infowindow .close-btn"
-              );
-              if (closeButton) {
-                closeButton.addEventListener("click", (e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  infoWindow.close();
-                });
-              }
-            }, 100);
           });
         } else {
           // content가 없어도 클릭 이벤트는 전달
