@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 import { Navigation, Footer } from "@components";
+import { LocationProvider } from "@/contexts";
 
 export const metadata: Metadata = {
   title: "앵모닝",
@@ -16,11 +17,13 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="flex flex-col h-screen">
-        <Navigation />
-        <main className="container mx-auto px-4 py-8 flex-grow">
-          {children}
-        </main>
-        <Footer />
+        <LocationProvider>
+          <Navigation />
+          <main className="container mx-auto px-4 py-8 flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </LocationProvider>
       </body>
     </html>
   );

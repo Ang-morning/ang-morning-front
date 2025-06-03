@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation } from "@/contexts";
 
 const mapId = "naver-map";
 
@@ -33,11 +34,13 @@ function Map({
   // prop destruction
 
   // lib hooks
+  const { userLocation, hasUserLocation } = useLocation();
 
   // state, ref, querystring hooks
   const mapRef = useRef<NaverMap>(null);
   const markersRef = useRef<naver.maps.Marker[]>([]);
   const infoWindowsRef = useRef<Record<string, naver.maps.InfoWindow>>({});
+  const myLocationMarkerRef = useRef<naver.maps.Marker | null>(null);
   const [loc, setLoc] = useState<Coordinates>(
     initialLocation ?? [127.1058342, 37.359708]
   );
@@ -50,20 +53,12 @@ function Map({
 
   // effects
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLoc([position.coords.longitude, position.coords.latitude]);
-      },
-      () => {
-        setLoc([126.978, 37.5665]);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maximumAge: 60000,
-      }
-    );
-  }, []);
+    if (userLocation) {
+      setLoc(userLocation);
+    } else if (initialLocation) {
+      setLoc(initialLocation);
+    }
+  }, [userLocation, initialLocation]);
 
   // centerLocation이 변경되면 지도 중심점 이동
   useEffect(() => {
@@ -120,6 +115,122 @@ function Map({
     markersRef.current.forEach((marker) => marker.setMap(null));
     markersRef.current = [];
     infoWindowsRef.current = {};
+
+    // 내 위치 마커 제거 (이전 마커가 있다면)
+    if (myLocationMarkerRef.current) {
+      myLocationMarkerRef.current.setMap(null);
+      myLocationMarkerRef.current = null;
+    }
+
+    // 내 위치 마커 추가 (위치를 알고 있는 경우)
+    if (hasUserLocation && userLocation) {
+      const myLocationMarker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(
+          userLocation[1],
+          userLocation[0]
+        ),
+        map: map,
+        title: "내 위치",
+        icon: {
+          content: `
+            <div style="
+              width: 16px; 
+              height: 16px; 
+              background-color: #4285f4; 
+              border: 3px solid white; 
+              border-radius: 50%; 
+              box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+              position: relative;
+            ">
+              <div style="
+                width: 30px; 
+                height: 30px; 
+                background-color: rgba(66, 133, 244, 0.2); 
+                border-radius: 50%; 
+                position: absolute; 
+                top: -10px; 
+                left: -10px;
+                animation: pulse 2s infinite;
+              "></div>
+            </div>
+            <style>
+              @keyframes pulse {
+                0% { transform: scale(0.8); opacity: 1; }
+                100% { transform: scale(2); opacity: 0; }
+              }
+            </style>
+          `,
+          anchor: new window.naver.maps.Point(11, 11),
+        },
+      });
+
+      myLocationMarkerRef.current = myLocationMarker;
+
+      // 내 위치 마커 클릭 시 정보창 표시
+      const myLocationInfoWindow = new window.naver.maps.InfoWindow({
+        content: `
+          <div style="padding: 10px; position: relative; min-width: 150px;" class="custom-infowindow">
+            <button 
+              class="close-btn"
+              style="
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                background: none;
+                border: none;
+                font-size: 14px;
+                cursor: pointer;
+                color: #666;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: background-color 0.2s;
+              "
+              onmouseover="this.style.backgroundColor='#f0f0f0'"
+              onmouseout="this.style.backgroundColor='transparent'"
+              title="닫기"
+            >
+              ✕
+            </button>
+            <div style="font-family: sans-serif;">
+              <h3 style="font-size: 14px; font-weight: bold; margin: 0 0 8px 0; color: #4285f4;">📍 내 위치</h3>
+              <p style="font-size: 12px; color: #666; margin: 0;">현재 계신 위치입니다</p>
+            </div>
+          </div>
+        `,
+      });
+
+      window.naver.maps.Event.addListener(myLocationMarker, "click", () => {
+        // 모든 info window 닫기
+        Object.values(infoWindowsRef.current).forEach((iw) => iw.close());
+
+        // 내 위치 info window 열기
+        myLocationInfoWindow.open(map, myLocationMarker);
+      });
+
+      // 내 위치 info window X 버튼 이벤트 연결
+      window.naver.maps.Event.addListener(
+        myLocationInfoWindow,
+        "domready",
+        () => {
+          setTimeout(() => {
+            const closeButton = document.querySelector(
+              ".custom-infowindow .close-btn"
+            );
+            if (closeButton) {
+              closeButton.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                myLocationInfoWindow.close();
+              });
+            }
+          }, 100);
+        }
+      );
+    }
 
     // 새로운 마커들 추가
     if (markers && markers.length > 0) {
@@ -212,7 +323,7 @@ function Map({
         markersRef.current.push(marker);
       });
     }
-  }, [loc, markers, onMarkerClick]);
+  }, [loc, markers, onMarkerClick, hasUserLocation, userLocation]);
 
   // 네이버 클라이언트 ID (임시로 하드코딩, 나중에 환경변수로 변경 필요)
   const naverClientId = "x87hzw0avw";

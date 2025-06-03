@@ -3,6 +3,7 @@
 import { Map } from "@components";
 import hospitalsMap from "@/data/hospitals.json";
 import { useState, useMemo, useRef } from "react";
+import { useLocation } from "@/contexts";
 
 // 병원 데이터 타입 정의
 interface Hospital {
@@ -22,6 +23,7 @@ export default function HospitalsPage() {
   // prop destruction
 
   // lib hooks
+  const { userLocation, isLoadingLocation } = useLocation();
 
   // state, ref, querystring hooks
   const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(
@@ -162,6 +164,18 @@ export default function HospitalsPage() {
     setSelectedCity("");
   };
 
+  // 로딩 중이면 로딩 표시
+  if (isLoadingLocation) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">위치 정보를 가져오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="text-center mb-8">
@@ -180,7 +194,7 @@ export default function HospitalsPage() {
             <h2 className="text-xl font-bold mb-4 text-gray-800">병원 위치</h2>
             <div className="rounded-lg h-[30vh]">
               <Map
-                initialLocation={[126.978, 37.5665]}
+                initialLocation={userLocation || [126.978, 37.5665]}
                 centerLocation={mapCenter}
                 markers={hospitalMarkers}
                 selectedMarkerId={selectedHospital?.id.toString()}
