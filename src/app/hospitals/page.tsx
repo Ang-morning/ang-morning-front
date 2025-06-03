@@ -192,7 +192,7 @@ export default function HospitalsPage() {
         <div>
           <div className="bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-bold mb-4 text-gray-800">병원 위치</h2>
-            <div className="rounded-lg h-[30vh]">
+            <div className="rounded-lg h-[40vh]">
               <Map
                 initialLocation={userLocation || [126.978, 37.5665]}
                 centerLocation={mapCenter}
